@@ -1,7 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+
+	"github.com/marktran77/go-pocker/deck"
+)
 
 func main() {
-	fmt.Println("Hello you")
+	card := deck.NewCard(deck.Spades, 1)
+
+	number := 3
+
+	numberString := strconv.Itoa(number)
+
+	fmt.Println(card)
 }
