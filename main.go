@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/marktran77/go-pocker/deck"
 )
@@ -10,9 +9,11 @@ import (
 func main() {
 	card := deck.NewCard(deck.Spades, 1)
 
-	number := 3
+	// deck
 
-	numberString := strconv.Itoa(number)
+	// number := 3
+
+	// numberString := strconv.Itoa(number)
 
 	fmt.Println(card)
 }
