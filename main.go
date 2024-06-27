@@ -7,13 +7,11 @@ import (
 )
 
 func main() {
-	card := deck.NewCard(deck.Spades, 1)
 
-	// deck
+	for i := 0; i < 10; i++ {
+		d := deck.New()
+		fmt.Println(d)
+		fmt.Println()
+	}
 
-	// number := 3
-
-	// numberString := strconv.Itoa(number)
-
-	fmt.Println(card)
 }
