@@ -41,7 +41,9 @@ func (s *Server) Start() {
 		panic(err)
 	}
 
-	go s.acceptLoop()
+	fmt.Printf("game server running on port %s", s.ListenAddr)
+
+	s.acceptLoop()
 }
 
 func (s *Server) handleConn(conn net.Conn) {
@@ -62,6 +64,7 @@ func (s *Server) acceptLoop() {
 		if err != nil {
 			panic(err)
 		}
+
 		go s.handleConn(conn)
 	}
 }
