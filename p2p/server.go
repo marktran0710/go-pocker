@@ -25,7 +25,7 @@ type ServerConfig struct {
 }
 
 type Message struct {
-	Payload io.ByteReader
+	Payload io.Reader
 	From    net.Addr
 }
 
@@ -42,7 +42,7 @@ type Server struct {
 
 func NewServer(cfg ServerConfig) *Server {
 	return &Server{
-		handler:      *NewHandler(),
+		handler:      &DefaultHandler{},
 		ServerConfig: cfg,
 		peers:        make(map[net.Addr]*Peer),
 		addPeer:      make(chan *Peer),
@@ -93,7 +93,6 @@ func (s *Server) handleConn(conn net.Conn) {
 			Payload: bytes.NewReader(buf[:n]),
 		}
 
-		fmt.Println(string(buf[:n]))
 	}
 }
 
@@ -114,6 +113,10 @@ func (s *Server) loop() {
 		case peer := <-s.addPeer:
 			fmt.Printf("new player connected %s\n", peer.conn.RemoteAddr())
 			s.peers[peer.conn.RemoteAddr()] = peer
+		case msg := <-s.msgCh:
+			if err := s.handler.HandleMessage(msg); err != nil {
+				panic(err)
+			}
 		}
 	}
 }
