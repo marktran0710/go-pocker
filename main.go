@@ -13,6 +13,7 @@ func main() {
 	//}
 
 	cfg := p2p.ServerConfig{
+		Version:    "go-pocker v0.1-alpha",
 		ListenAddr: ":3000",
 	}
 	server := p2p.NewServer(cfg)
