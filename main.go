@@ -17,7 +17,12 @@ func main() {
 		ListenAddr: ":3000",
 	}
 	server := p2p.NewServer(cfg)
+	go server.Start()
 
-	server.Start()
-
+	remoteCfg := p2p.ServerConfig{
+		Version:    "go-pocker v0.1-alpha",
+		ListenAddr: ":4000",
+	}
+	remoteServer := p2p.NewServer(remoteCfg)
+	remoteServer.Start()
 }
