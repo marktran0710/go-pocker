@@ -3,7 +3,6 @@ package p2p
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"net"
 	"sync"
 )
@@ -11,23 +10,9 @@ import (
 type TCPTransport struct {
 }
 
-type Peer struct {
-	conn net.Conn
-}
-
-func (p *Peer) Send(b []byte) error {
-	_, err := p.conn.Write(b)
-	return err
-}
-
 type ServerConfig struct {
 	Version    string
 	ListenAddr string
-}
-
-type Message struct {
-	Payload io.Reader
-	From    net.Addr
 }
 
 type Server struct {
@@ -111,7 +96,6 @@ func (s *Server) handleConn(p *Peer) {
 			From:    p.conn.RemoteAddr(),
 			Payload: bytes.NewReader(buf[:n]),
 		}
-
 	}
 
 	s.delPeer <- p
