@@ -2,8 +2,11 @@ package p2p
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Message struct {
@@ -34,5 +37,36 @@ func (p *Peer) ReadLoop(msgCh chan *Message) {
 		}
 	}
 
+	// TODO: unregister this peer!
 	p.conn.Close()
+}
+
+type TCPTransport struct {
+	listenAddr string
+	listener   net.Listener
+}
+
+func NewTCPTransport(addr string) *TCPTransport {
+	return &TCPTransport{
+		listenAddr: addr,
+	}
+}
+
+func (t *TCPTransport) ListenAndAccept() error {
+	ln, err := net.Listen("tcp", t.listenAddr)
+	if err != nil {
+		return (err)
+	}
+
+	t.listener = ln
+
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			logrus.Error(err)
+			continue
+		}
+	}
+
+	return fmt.Errorf("TCP transport stopped reason: ?")
 }

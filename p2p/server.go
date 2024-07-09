@@ -1,14 +1,10 @@
 package p2p
 
 import (
-	"bytes"
 	"fmt"
 	"net"
 	"sync"
 )
-
-type TCPTransport struct {
-}
 
 type ServerConfig struct {
 	Version    string
@@ -82,34 +78,6 @@ func (s *Server) acceptLoop() {
 
 		go s.handleConn(peer)
 	}
-}
-
-func (s *Server) handleConn(p *Peer) {
-	buf := make([]byte, 1024)
-	for {
-		n, err := p.conn.Read(buf)
-		if err != nil {
-			break
-		}
-
-		s.msgCh <- &Message{
-			From:    p.conn.RemoteAddr(),
-			Payload: bytes.NewReader(buf[:n]),
-		}
-	}
-
-	s.delPeer <- p
-}
-
-func (s *Server) listen() error {
-	ln, err := net.Listen("tcp", s.ListenAddr)
-	if err != nil {
-		return (err)
-	}
-
-	s.listener = ln
-
-	return nil
 }
 
 func (s *Server) loop() {
