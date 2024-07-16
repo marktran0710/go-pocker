@@ -44,6 +44,8 @@ func (p *Peer) ReadLoop(msgCh chan *Message) {
 type TCPTransport struct {
 	listenAddr string
 	listener   net.Listener
+	AddPeer    chan *Peer
+	DelPeer    chan *Peer
 }
 
 func NewTCPTransport(addr string) *TCPTransport {
@@ -66,6 +68,13 @@ func (t *TCPTransport) ListenAndAccept() error {
 			logrus.Error(err)
 			continue
 		}
+
+		peer := &Peer{
+			conn: conn,
+		}
+
+		t.AddPeer <- peer
+
 	}
 
 	return fmt.Errorf("TCP transport stopped reason: ?")
