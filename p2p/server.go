@@ -7,9 +7,28 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type GameVariant uint8
+
+func (gv GameVariant) String() string {
+	switch gv {
+	case TexasHoldem:
+		return "TEXAS HOLDEM"
+	case Other:
+		return "other"
+	default:
+		return "unknown"
+	}
+}
+
+const (
+	TexasHoldem GameVariant = iota
+	Other
+)
+
 type ServerConfig struct {
-	Version    string
-	ListenAddr string
+	Version     string
+	ListenAddr  string
+	GameVariant GameVariant
 }
 
 type Server struct {
@@ -49,8 +68,8 @@ func (s *Server) Start() {
 
 	fmt.Printf("game server running on port %s\n", s.ListenAddr)
 	logrus.WithFields(logrus.Fields{
-		"port": s.ListenAddr,
-		"type": "Texas Hold'em",
+		"port":    s.ListenAddr,
+		"variant": TexasHoldem,
 	}).Info("started new game server")
 	s.transport.ListenAndAccept()
 }
@@ -83,7 +102,6 @@ func (s *Server) loop() {
 
 		case peer := <-s.addPeer:
 			// TODO: check max players and other game state logic.
-
 			go peer.ReadLoop(s.msgCh)
 
 			logrus.WithFields(logrus.Fields{
